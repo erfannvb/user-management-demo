@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,20 +22,26 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException exception) {
+
+        ErrorResponse errorResponse = new ErrorResponse(List.of(exception.getLocalizedMessage()));
+
         Map<String, Object> body = new HashMap<>();
 
-        body.put(TIME_STAMP, LocalDate.now());
-        body.put(MESSAGE, exception.getMessage());
+        body.put(TIME_STAMP, errorResponse.getTimeStamp());
+        body.put(MESSAGE, errorResponse.getMessages());
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NoDataFoundException.class)
     public ResponseEntity<Object> handleNoDataFoundException(NoDataFoundException exception) {
+
+        ErrorResponse errorResponse = new ErrorResponse(List.of(exception.getLocalizedMessage()));
+
         Map<String, Object> body = new HashMap<>();
 
-        body.put(TIME_STAMP, LocalDate.now());
-        body.put(MESSAGE, exception.getMessage());
+        body.put(TIME_STAMP, errorResponse.getTimeStamp());
+        body.put(MESSAGE, errorResponse.getMessages());
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
@@ -47,9 +52,11 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpStatusCode status,
                                                                   WebRequest request) {
 
+        ErrorResponse errorResponse = new ErrorResponse(List.of(ex.getLocalizedMessage()));
+
         Map<String, Object> body = new HashMap<>();
 
-        body.put(TIME_STAMP, LocalDate.now());
+        body.put(TIME_STAMP, errorResponse.getTimeStamp());
         body.put(STATUS, status.value());
 
         List<String> errors = ex.getBindingResult()
