@@ -28,7 +28,7 @@ public class UserController {
             @ApiResponse(responseCode = "201", description = "Successful creation of user"),
             @ApiResponse(responseCode = "400", description = "Bad request: unsuccessful submission")
     })
-    @PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/user/register", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> saveUser(@RequestBody @Valid User user) {
         userService.saveUser(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
