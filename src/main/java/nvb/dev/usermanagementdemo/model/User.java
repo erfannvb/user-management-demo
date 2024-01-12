@@ -1,5 +1,6 @@
 package nvb.dev.usermanagementdemo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,7 @@ public class User {
     @Column(name = "age", nullable = false)
     private int age;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Account> accountSet = new HashSet<>();
 
