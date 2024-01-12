@@ -10,7 +10,7 @@ public interface AccountService {
 
     Account findAccountByUserId(Long userId);
 
-    Account updateAccount(Account account, Long userId);
+    Account updateAccount(String name, Long userId);
 
     List<Account> getUserAccounts(Long userId);
 

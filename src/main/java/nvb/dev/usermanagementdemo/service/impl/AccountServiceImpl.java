@@ -34,11 +34,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account updateAccount(Account account, Long userId) {
+    public Account updateAccount(String name, Long userId) {
         Optional<Account> optionalAccount = accountRepository.findByUserId(userId);
-        Account existingAccount = unwrapAccount(optionalAccount, userId);
-        existingAccount.setName(account.getName());
-        return accountRepository.save(existingAccount);
+        Account account = unwrapAccount(optionalAccount, userId);
+        account.setName(name);
+        return accountRepository.save(account);
     }
 
     @Override
