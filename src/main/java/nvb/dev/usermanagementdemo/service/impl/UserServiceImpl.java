@@ -6,6 +6,7 @@ import nvb.dev.usermanagementdemo.exception.UserNotFoundException;
 import nvb.dev.usermanagementdemo.model.User;
 import nvb.dev.usermanagementdemo.repository.UserRepository;
 import nvb.dev.usermanagementdemo.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +18,11 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    private final BCryptPasswordEncoder passwordEncoder;
+
     @Override
     public User saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
