@@ -34,6 +34,10 @@ public class User {
     @Column(name = "username", nullable = false)
     private String username;
 
+    @NotEmpty(message = "password cannot be empty")
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @Range(min = 18, max = 55)
     @Column(name = "age", nullable = false)
     private int age;
