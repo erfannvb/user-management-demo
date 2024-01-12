@@ -21,4 +21,8 @@ public class Account {
     @Column(name = "account_name", nullable = false)
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
 }

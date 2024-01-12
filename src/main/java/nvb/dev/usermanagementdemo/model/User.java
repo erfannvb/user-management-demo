@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "tbl_user")
 @AllArgsConstructor
@@ -33,5 +36,8 @@ public class User {
     @Range(min = 18, max = 55)
     @Column(name = "age", nullable = false)
     private int age;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Account> accountSet = new HashSet<>();
 
 }
