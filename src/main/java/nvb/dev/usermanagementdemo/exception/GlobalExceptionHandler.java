@@ -33,6 +33,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<Object> handleAccountNotFoundException(AccountNotFoundException exception) {
+
+        ErrorResponse errorResponse = new ErrorResponse(List.of(exception.getLocalizedMessage()));
+
+        Map<String, Object> body = new HashMap<>();
+
+        body.put(TIME_STAMP, errorResponse.getTimeStamp());
+        body.put(MESSAGE, errorResponse.getMessages());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(NoDataFoundException.class)
     public ResponseEntity<Object> handleNoDataFoundException(NoDataFoundException exception) {
 
