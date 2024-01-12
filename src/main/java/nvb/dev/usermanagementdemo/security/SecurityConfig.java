@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2/**").permitAll()
                         .requestMatchers(HttpMethod.GET).permitAll()
-                        .requestMatchers(HttpMethod.POST).hasAnyRole(ADMIN_ROLE, USER_ROLE)
+                        .requestMatchers(HttpMethod.POST).permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/user/*").hasRole(ADMIN_ROLE)
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/user/all").hasRole(ADMIN_ROLE)
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/account/user/*").hasRole(ADMIN_ROLE)
