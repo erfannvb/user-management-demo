@@ -5,7 +5,6 @@ public class SecurityConstant {
     private SecurityConstant() {
     }
 
-    public static final String ADMIN_ROLE = "ADMIN";
-    public static final String USER_ROLE = "USER";
+    public static final String REGISTER_PATH = "/api/v1/user/register";
 
 }
