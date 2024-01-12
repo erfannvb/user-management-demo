@@ -30,7 +30,8 @@ public class UserController {
     })
     @PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> saveUser(@RequestBody @Valid User user) {
-        return new ResponseEntity<>(userService.saveUser(user), HttpStatus.CREATED);
+        userService.saveUser(user);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Operation(summary = "Get user by id", description = "Returns an user based on an ID")
