@@ -1,5 +1,6 @@
 package nvb.dev.usermanagementdemo.security;
 
+import nvb.dev.usermanagementdemo.security.filter.AuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,7 +27,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, REGISTER_PATH).permitAll()
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults())
+                .addFilter(new AuthenticationFilter())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return httpSecurity.build();
