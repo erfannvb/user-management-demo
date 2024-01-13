@@ -3,6 +3,7 @@ package nvb.dev.usermanagementdemo.security;
 import lombok.AllArgsConstructor;
 import nvb.dev.usermanagementdemo.security.filter.AuthenticationFilter;
 import nvb.dev.usermanagementdemo.security.filter.ExceptionHandlerFilter;
+import nvb.dev.usermanagementdemo.security.filter.JWTAuthorizationFilter;
 import nvb.dev.usermanagementdemo.security.manager.AuthManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
         AuthenticationFilter authenticationFilter = new AuthenticationFilter(authManager);
-        authenticationFilter.setFilterProcessesUrl("/authenticate");
+        authenticationFilter.setFilterProcessesUrl("/api/v1/authenticate");
 
         httpSecurity
                 .headers(header -> header.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
@@ -38,6 +39,7 @@ public class SecurityConfig {
                 )
                 .addFilterBefore(new ExceptionHandlerFilter(), AuthenticationFilter.class)
                 .addFilter(authenticationFilter)
+                .addFilterAfter(new JWTAuthorizationFilter(), AuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return httpSecurity.build();
