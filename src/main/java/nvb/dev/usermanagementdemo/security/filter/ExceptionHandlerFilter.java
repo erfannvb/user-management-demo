@@ -18,17 +18,28 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
         try {
             filterChain.doFilter(request, response);
-        } catch (UserNotFoundException | NoDataFoundException e) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            response.getWriter().write(e.getLocalizedMessage());
-            response.getWriter().flush();
-        } catch (JWTVerificationException e) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("JWT Not Valid.");
-            response.getWriter().flush();
-        } catch (RuntimeException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } catch (Exception e) {
+            handleException(response, e);
         }
 
+    }
+
+    private void handleException(HttpServletResponse response, Exception e) throws IOException {
+        int statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+        String message = "Internal Server Error";
+
+        if (e instanceof UserNotFoundException || e instanceof NoDataFoundException) {
+            statusCode = HttpServletResponse.SC_NOT_FOUND;
+            message = e.getLocalizedMessage();
+        } else if (e instanceof JWTVerificationException) {
+            statusCode = HttpServletResponse.SC_FORBIDDEN;
+            message = e.getLocalizedMessage();
+        } else if (e instanceof RuntimeException) {
+            statusCode = HttpServletResponse.SC_BAD_REQUEST;
+        }
+
+        response.setStatus(statusCode);
+        response.getWriter().write(message);
+        response.getWriter().flush();
     }
 }
