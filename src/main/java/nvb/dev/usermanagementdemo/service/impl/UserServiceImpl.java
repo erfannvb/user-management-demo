@@ -17,7 +17,6 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
@@ -36,6 +35,12 @@ public class UserServiceImpl implements UserService {
         List<User> userList = userRepository.findAll();
         if (userList.isEmpty()) throw new NoDataFoundException();
         return userList;
+    }
+
+    @Override
+    public User findUserByUsername(String username) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        return unwrapUser(optionalUser, 404L);
     }
 
     @Override
@@ -70,5 +75,10 @@ public class UserServiceImpl implements UserService {
         List<User> userList = userRepository.findAll();
         if (userList.isEmpty()) throw new NoDataFoundException();
         userRepository.deleteAll();
+    }
+
+    private User unwrapUser(Optional<User> entity, Long id) {
+        if (entity.isPresent()) return entity.get();
+        else throw new UserNotFoundException(id);
     }
 }
