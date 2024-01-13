@@ -40,13 +40,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException failed)
             throws IOException, ServletException {
-        System.out.println("Oops, authentication did not work!!!");
+
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authResult)
             throws IOException, ServletException {
-        System.out.println("Authentication Worked!!!");
+
     }
 }
