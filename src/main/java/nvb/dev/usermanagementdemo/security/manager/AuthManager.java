@@ -22,7 +22,7 @@ public class AuthManager implements AuthenticationManager {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         User user = userService.findUserByUsername(authentication.getName());
         if (!passwordEncoder.matches(authentication.getCredentials().toString(), user.getPassword())) {
-            throw new BadCredentialsException("Wrong Password");
+            throw new BadCredentialsException("You provided an incorrect password.");
         }
         return new UsernamePasswordAuthenticationToken(authentication.getName(), user.getPassword());
     }
