@@ -1,5 +1,7 @@
 package nvb.dev.usermanagementdemo.security.filter;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,6 +16,9 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.Date;
+
+import static nvb.dev.usermanagementdemo.constant.SecurityConstant.*;
 
 @AllArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -40,7 +45,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException failed)
             throws IOException, ServletException {
-
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write(failed.getMessage());
+        response.getWriter().flush();
     }
 
     @Override
@@ -48,5 +55,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             FilterChain chain, Authentication authResult)
             throws IOException, ServletException {
 
+        String token = JWT.create()
+                .withSubject(authResult.getName())
+                .withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION))
+                .sign(Algorithm.HMAC512(SECRET_KEY));
+
+        response.addHeader(AUTHORIZATION, BEARER + token);
     }
 }
