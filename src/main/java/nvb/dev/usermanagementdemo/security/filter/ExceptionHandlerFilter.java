@@ -1,5 +1,6 @@
 package nvb.dev.usermanagementdemo.security.filter;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,6 +21,10 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         } catch (UserNotFoundException | NoDataFoundException e) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             response.getWriter().write(e.getLocalizedMessage());
+            response.getWriter().flush();
+        } catch (JWTVerificationException e) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("JWT Not Valid.");
             response.getWriter().flush();
         } catch (RuntimeException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
