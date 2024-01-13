@@ -18,7 +18,9 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (UserNotFoundException | NoDataFoundException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.getWriter().write(e.getLocalizedMessage());
+            response.getWriter().flush();
         } catch (RuntimeException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
