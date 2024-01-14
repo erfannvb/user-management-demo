@@ -2,6 +2,7 @@ package nvb.dev.usermanagementdemo.service.impl;
 
 import lombok.AllArgsConstructor;
 import nvb.dev.usermanagementdemo.exception.EntityNotFoundException;
+import nvb.dev.usermanagementdemo.exception.NoDataFoundException;
 import nvb.dev.usermanagementdemo.model.Account;
 import nvb.dev.usermanagementdemo.model.User;
 import nvb.dev.usermanagementdemo.repository.AccountRepository;
@@ -47,12 +48,19 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public List<Account> getAllAccounts() {
-        return accountRepository.findAll();
+        List<Account> accountList = accountRepository.findAll();
+        if (accountList.isEmpty()) throw new NoDataFoundException();
+        return accountList;
     }
 
     @Override
     public void deleteAccountByUserId(Long userId) {
-        accountRepository.deleteByUserId(userId);
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            accountRepository.deleteByUserId(userId);
+        } else {
+            throw new EntityNotFoundException(User.class, userId);
+        }
     }
 
     private static User unwrapUser(Optional<User> entity, Long id) {
