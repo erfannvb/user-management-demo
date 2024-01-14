@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import nvb.dev.usermanagementdemo.exception.EntityNotFoundException;
 import nvb.dev.usermanagementdemo.exception.NoDataFoundException;
 import nvb.dev.usermanagementdemo.model.User;
+import nvb.dev.usermanagementdemo.model.dto.UserDTO;
 import nvb.dev.usermanagementdemo.repository.UserRepository;
 import nvb.dev.usermanagementdemo.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,16 +27,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() ->
-                new EntityNotFoundException(User.class, userId));
+    public UserDTO findUserById(Long userId) {
+        return userRepository.findById(userId)
+                .map(user -> new UserDTO(
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getUsername(),
+                        user.getAge()))
+                .orElseThrow(() ->
+                        new EntityNotFoundException(User.class, userId));
     }
 
     @Override
-    public List<User> findAllUsers() {
+    public List<UserDTO> findAllUsers() {
         List<User> userList = userRepository.findAll();
         if (userList.isEmpty()) throw new NoDataFoundException();
-        return userList;
+        return userList.stream().map(user -> new UserDTO(
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUsername(),
+                user.getAge()
+        )).toList();
     }
 
     @Override

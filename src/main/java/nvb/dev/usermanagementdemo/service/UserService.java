@@ -1,6 +1,7 @@
 package nvb.dev.usermanagementdemo.service;
 
 import nvb.dev.usermanagementdemo.model.User;
+import nvb.dev.usermanagementdemo.model.dto.UserDTO;
 
 import java.util.List;
 
@@ -8,9 +9,9 @@ public interface UserService {
 
     User saveUser(User user);
 
-    User findUserById(Long userId);
+    UserDTO findUserById(Long userId);
 
-    List<User> findAllUsers();
+    List<UserDTO> findAllUsers();
 
     User findUserByUsername(String username);
 
