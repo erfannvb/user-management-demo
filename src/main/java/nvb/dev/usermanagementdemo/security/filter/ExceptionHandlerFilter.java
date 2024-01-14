@@ -4,8 +4,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import nvb.dev.usermanagementdemo.exception.EntityNotFoundException;
 import nvb.dev.usermanagementdemo.exception.NoDataFoundException;
-import nvb.dev.usermanagementdemo.exception.UserNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         int statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
         String message = "Internal Server Error";
 
-        if (e instanceof UserNotFoundException || e instanceof NoDataFoundException) {
+        if (e instanceof EntityNotFoundException || e instanceof NoDataFoundException) {
             statusCode = HttpServletResponse.SC_NOT_FOUND;
             message = e.getLocalizedMessage();
         } else if (e instanceof JWTVerificationException) {
