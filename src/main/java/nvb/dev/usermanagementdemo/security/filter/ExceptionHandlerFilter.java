@@ -15,13 +15,11 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
         try {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             handleException(response, e);
         }
-
     }
 
     private void handleException(HttpServletResponse response, Exception e) throws IOException {
