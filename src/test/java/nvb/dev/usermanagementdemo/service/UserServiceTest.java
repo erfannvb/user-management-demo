@@ -3,6 +3,7 @@ package nvb.dev.usermanagementdemo.service;
 import nvb.dev.usermanagementdemo.exception.EntityNotFoundException;
 import nvb.dev.usermanagementdemo.exception.NoDataFoundException;
 import nvb.dev.usermanagementdemo.model.User;
+import nvb.dev.usermanagementdemo.model.dto.UserDTO;
 import nvb.dev.usermanagementdemo.repository.UserRepository;
 import nvb.dev.usermanagementdemo.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -90,13 +91,13 @@ class UserServiceTest {
     @Test
     void findUserByIdTest_ExistingUser() {
         User user = new User();
-        user.setId(1L);
+        user.setUsername("testUsername");
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        User foundUser = userService.findUserById(1L);
+        UserDTO foundUser = userService.findUserById(1L);
 
-        assertEquals(1L, foundUser.getId());
+        assertEquals("testUsername", foundUser.username());
         verify(userRepository, atLeastOnce()).findById(1L);
     }
 
@@ -116,7 +117,7 @@ class UserServiceTest {
 
         when(userRepository.findAll()).thenReturn(userList);
 
-        List<User> allUsers = userService.findAllUsers();
+        List<UserDTO> allUsers = userService.findAllUsers();
 
         assertEquals(2, allUsers.size());
         verify(userRepository, atLeastOnce()).findAll();
