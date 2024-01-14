@@ -1,8 +1,8 @@
 package nvb.dev.usermanagementdemo.service.impl;
 
 import lombok.AllArgsConstructor;
+import nvb.dev.usermanagementdemo.exception.EntityNotFoundException;
 import nvb.dev.usermanagementdemo.exception.NoDataFoundException;
-import nvb.dev.usermanagementdemo.exception.UserNotFoundException;
 import nvb.dev.usermanagementdemo.model.User;
 import nvb.dev.usermanagementdemo.repository.UserRepository;
 import nvb.dev.usermanagementdemo.service.UserService;
@@ -27,7 +27,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        return userRepository.findById(userId).orElseThrow(() ->
+                new EntityNotFoundException(User.class, userId));
     }
 
     @Override
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
             return userRepository.save(currentUser);
         } else {
-            throw new UserNotFoundException(userId);
+            throw new EntityNotFoundException(User.class, userId);
         }
     }
 
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService {
         if (optionalUser.isPresent()) {
             userRepository.deleteById(userId);
         } else {
-            throw new UserNotFoundException(userId);
+            throw new EntityNotFoundException(User.class, userId);
         }
     }
 
@@ -79,6 +80,6 @@ public class UserServiceImpl implements UserService {
 
     private User unwrapUser(Optional<User> entity, Long id) {
         if (entity.isPresent()) return entity.get();
-        else throw new UserNotFoundException(id);
+        else throw new EntityNotFoundException(User.class, id);
     }
 }
