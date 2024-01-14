@@ -1,8 +1,7 @@
 package nvb.dev.usermanagementdemo.service.impl;
 
 import lombok.AllArgsConstructor;
-import nvb.dev.usermanagementdemo.exception.AccountNotFoundException;
-import nvb.dev.usermanagementdemo.exception.UserNotFoundException;
+import nvb.dev.usermanagementdemo.exception.EntityNotFoundException;
 import nvb.dev.usermanagementdemo.model.Account;
 import nvb.dev.usermanagementdemo.model.User;
 import nvb.dev.usermanagementdemo.repository.AccountRepository;
@@ -58,12 +57,12 @@ public class AccountServiceImpl implements AccountService {
 
     private static User unwrapUser(Optional<User> entity, Long id) {
         if (entity.isPresent()) return entity.get();
-        else throw new UserNotFoundException(id);
+        else throw new EntityNotFoundException(User.class, id);
     }
 
     private static Account unwrapAccount(Optional<Account> entity, Long id) {
         if (entity.isPresent()) return entity.get();
-        else throw new AccountNotFoundException(id);
+        else throw new EntityNotFoundException(Account.class, id);
     }
 
 }
