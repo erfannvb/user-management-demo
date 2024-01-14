@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import nvb.dev.usermanagementdemo.model.User;
+import nvb.dev.usermanagementdemo.model.dto.UserDTO;
 import nvb.dev.usermanagementdemo.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,7 +41,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User does not exist")
     })
     @GetMapping(value = "/user/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> findUserById(@PathVariable Long userId) {
+    public ResponseEntity<UserDTO> findUserById(@PathVariable Long userId) {
         return new ResponseEntity<>(userService.findUserById(userId), HttpStatus.OK);
     }
 
@@ -50,7 +51,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "Data Not Found")
     })
     @GetMapping(value = "/user/all")
-    public ResponseEntity<List<User>> findAllUsers() {
+    public ResponseEntity<List<UserDTO>> findAllUsers() {
         return new ResponseEntity<>(userService.findAllUsers(), HttpStatus.OK);
     }
 
