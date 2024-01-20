@@ -3,8 +3,9 @@ package nvb.dev.usermanagementdemo.service.impl;
 import lombok.AllArgsConstructor;
 import nvb.dev.usermanagementdemo.exception.EntityNotFoundException;
 import nvb.dev.usermanagementdemo.exception.NoDataFoundException;
+import nvb.dev.usermanagementdemo.mapper.UserMapper;
 import nvb.dev.usermanagementdemo.model.User;
-import nvb.dev.usermanagementdemo.model.dto.UserDTO;
+import nvb.dev.usermanagementdemo.dto.UserDTO;
 import nvb.dev.usermanagementdemo.repository.UserRepository;
 import nvb.dev.usermanagementdemo.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +20,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     @Override
     public User saveUser(User user) {
@@ -29,25 +31,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findUserById(Long userId) {
         return userRepository.findById(userId)
-                .map(user -> new UserDTO(
-                        user.getFirstName(),
-                        user.getLastName(),
-                        user.getUsername(),
-                        user.getAge()))
-                .orElseThrow(() ->
-                        new EntityNotFoundException(User.class, userId));
+                .map(userMapper::userToUserDTO)
+                .orElseThrow(() -> new EntityNotFoundException(User.class, userId));
     }
 
     @Override
     public List<UserDTO> findAllUsers() {
         List<User> userList = userRepository.findAll();
         if (userList.isEmpty()) throw new NoDataFoundException();
-        return userList.stream().map(user -> new UserDTO(
-                user.getFirstName(),
-                user.getLastName(),
-                user.getUsername(),
-                user.getAge()
-        )).toList();
+        return userList.stream().map(userMapper::userToUserDTO).toList();
     }
 
     @Override

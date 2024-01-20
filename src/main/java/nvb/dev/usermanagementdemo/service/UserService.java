@@ -1,7 +1,7 @@
 package nvb.dev.usermanagementdemo.service;
 
 import nvb.dev.usermanagementdemo.model.User;
-import nvb.dev.usermanagementdemo.model.dto.UserDTO;
+import nvb.dev.usermanagementdemo.dto.UserDTO;
 
 import java.util.List;
 
