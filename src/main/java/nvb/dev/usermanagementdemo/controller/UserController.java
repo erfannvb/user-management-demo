@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import nvb.dev.usermanagementdemo.model.User;
-import nvb.dev.usermanagementdemo.model.dto.UserDTO;
+import nvb.dev.usermanagementdemo.dto.UserDTO;
 import nvb.dev.usermanagementdemo.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
