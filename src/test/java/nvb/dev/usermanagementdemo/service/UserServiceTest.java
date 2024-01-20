@@ -2,8 +2,9 @@ package nvb.dev.usermanagementdemo.service;
 
 import nvb.dev.usermanagementdemo.exception.EntityNotFoundException;
 import nvb.dev.usermanagementdemo.exception.NoDataFoundException;
+import nvb.dev.usermanagementdemo.mapper.UserMapper;
 import nvb.dev.usermanagementdemo.model.User;
-import nvb.dev.usermanagementdemo.model.dto.UserDTO;
+import nvb.dev.usermanagementdemo.dto.UserDTO;
 import nvb.dev.usermanagementdemo.repository.UserRepository;
 import nvb.dev.usermanagementdemo.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,9 @@ class UserServiceTest {
 
     @Mock
     BCryptPasswordEncoder passwordEncoder;
+
+    @Mock
+    UserMapper userMapper;
 
     @InjectMocks
     UserServiceImpl userService;
@@ -93,11 +97,15 @@ class UserServiceTest {
         User user = new User();
         user.setUsername("testUsername");
 
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername("testUsername");
+
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userMapper.userToUserDTO(user)).thenReturn(userDTO);
 
         UserDTO foundUser = userService.findUserById(1L);
 
-        assertEquals("testUsername", foundUser.username());
+        assertEquals("testUsername", foundUser.getUsername());
         verify(userRepository, atLeastOnce()).findById(1L);
     }
 
