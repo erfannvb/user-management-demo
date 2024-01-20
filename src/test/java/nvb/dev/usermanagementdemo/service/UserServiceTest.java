@@ -17,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static nvb.dev.usermanagementdemo.MotherObject.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -37,31 +38,28 @@ class UserServiceTest {
 
     @Test
     void saveUserTest() {
-        User user = new User();
-        user.setUsername("testUser");
-        user.setPassword("testPassword");
 
-        when(passwordEncoder.encode(user.getPassword())).thenReturn("testPassword");
-        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(passwordEncoder.encode(anyValidUser().getPassword())).thenReturn("dummy");
+        when(userRepository.save(any(User.class))).thenReturn(anyValidUser());
 
-        User savedUser = userService.saveUser(user);
+        User savedUser = userService.saveUser(anyValidUser());
 
-        assertEquals("testUser", savedUser.getUsername());
-        assertEquals("testPassword", savedUser.getPassword());
+        assertEquals("dummy", savedUser.getUsername());
+        assertEquals("dummy", savedUser.getPassword());
 
-        verify(passwordEncoder, atLeastOnce()).encode(user.getPassword());
-        verify(userRepository, atLeastOnce()).save(user);
+        verify(passwordEncoder, atLeastOnce()).encode(anyValidUser().getPassword());
+        verify(userRepository, atLeastOnce()).save(anyValidUser());
     }
 
     @Test
     void updateUserTest_ExistingUser() {
         long userId = 1L;
 
-        User existingUser = new User();
+        User existingUser = anyValidUser();
         existingUser.setId(userId);
         existingUser.setUsername("existingUser");
 
-        User updatedUser = new User();
+        User updatedUser = anyValidUpdatedUser();
         updatedUser.setId(userId);
         updatedUser.setUsername("updatedUser");
 
@@ -80,13 +78,9 @@ class UserServiceTest {
     void updateUserTest_NonExistingUser() {
         Long userId = 1L;
 
-        User updatedUser = new User();
-        updatedUser.setId(userId);
-        updatedUser.setUsername("updatedUser");
-
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> userService.updateUser(updatedUser, userId));
+        assertThrows(EntityNotFoundException.class, () -> userService.updateUser(anyValidUpdatedUser(), userId));
 
         verify(userRepository, atLeastOnce()).findById(userId);
         verify(userRepository, never()).save(any(User.class));
@@ -94,34 +88,26 @@ class UserServiceTest {
 
     @Test
     void findUserByIdTest_ExistingUser() {
-        User user = new User();
-        user.setUsername("testUsername");
-
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUsername("testUsername");
-
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(userMapper.userToUserDTO(user)).thenReturn(userDTO);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(anyValidUser()));
+        when(userMapper.userToUserDTO(anyValidUser())).thenReturn(anyValidUserDTO());
 
         UserDTO foundUser = userService.findUserById(1L);
 
-        assertEquals("testUsername", foundUser.getUsername());
+        assertEquals("dummy", foundUser.getUsername());
         verify(userRepository, atLeastOnce()).findById(1L);
     }
 
     @Test
     void findUserByIdTest_NonExistingUser() {
-        User user = new User();
-
         when(userRepository.findById(4L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> userService.findUserById(user.getId()));
-        verify(userRepository, atLeastOnce()).findById(user.getId());
+        assertThrows(EntityNotFoundException.class, () -> userService.findUserById(anyValidUser().getId()));
+        verify(userRepository, atLeastOnce()).findById(anyValidUser().getId());
     }
 
     @Test
     void findAllUsersTest_ExistingUsers() {
-        List<User> userList = List.of(new User(), new User());
+        List<User> userList = List.of(anyValidUser(), anyValidUser());
 
         when(userRepository.findAll()).thenReturn(userList);
 
@@ -141,33 +127,26 @@ class UserServiceTest {
 
     @Test
     void findUserByUsernameTest_ExistingUser() {
-        User user = new User();
-        user.setUsername("john.doe");
+        when(userRepository.findByUsername(anyValidUser().getUsername())).thenReturn(Optional.of(anyValidUser()));
 
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        User foundUser = userService.findUserByUsername(anyValidUser().getUsername());
 
-        User foundUser = userService.findUserByUsername(user.getUsername());
-
-        assertEquals("john.doe", foundUser.getUsername());
-        verify(userRepository, atLeastOnce()).findByUsername(user.getUsername());
+        assertEquals("dummy", foundUser.getUsername());
+        verify(userRepository, atLeastOnce()).findByUsername(anyValidUser().getUsername());
     }
 
     @Test
     void findUserByUsernameTest_NonExistingUser() {
-        User user = new User();
+        when(userRepository.findByUsername(anyValidUser().getUsername())).thenReturn(Optional.empty());
 
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class, () -> userService.findUserByUsername(user.getUsername()));
-        verify(userRepository, atLeastOnce()).findByUsername(user.getUsername());
+        assertThrows(EntityNotFoundException.class, () ->
+                userService.findUserByUsername(anyValidUser().getUsername()));
+        verify(userRepository, atLeastOnce()).findByUsername(anyValidUser().getUsername());
     }
 
     @Test
     void deleteUserByIdTest_ExistingUser() {
-        User user = new User();
-        user.setId(1L);
-
-        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userRepository.findById(anyValidUser().getId())).thenReturn(Optional.of(anyValidUser()));
 
         userService.deleteUserById(1L);
 
@@ -177,19 +156,17 @@ class UserServiceTest {
 
     @Test
     void deleteUserByIdTest_NonExistingUser() {
-        Long userId = 1L;
+        when(userRepository.findById(anyValidUser().getId())).thenReturn(Optional.empty());
 
-        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> userService.deleteUserById(anyValidUser().getId()));
 
-        assertThrows(EntityNotFoundException.class, () -> userService.deleteUserById(userId));
-
-        verify(userRepository, atLeastOnce()).findById(userId);
-        verify(userRepository, never()).deleteById(userId);
+        verify(userRepository, atLeastOnce()).findById(anyValidUser().getId());
+        verify(userRepository, never()).deleteById(anyValidUser().getId());
     }
 
     @Test
     void deleteAllUsersTest_ExistingUsers() {
-        List<User> userList = List.of(new User(), new User());
+        List<User> userList = List.of(anyValidUser(), anyValidUser());
 
         when(userRepository.findAll()).thenReturn(userList);
 

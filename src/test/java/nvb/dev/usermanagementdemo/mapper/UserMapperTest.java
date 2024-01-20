@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static nvb.dev.usermanagementdemo.MotherObject.anyValidUser;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
@@ -19,18 +20,10 @@ class UserMapperTest {
 
     @Test
     void userToUserDTO() {
-        User user = new User();
-        user.setId(1L);
-        user.setFirstName("test");
-        user.setLastName("test");
-        user.setUsername("test");
-        user.setPassword("test");
-        user.setAge(30);
+        UserDTO userDTO = userMapper.userToUserDTO(anyValidUser());
 
-        UserDTO userDTO = userMapper.userToUserDTO(user);
-
-        assertEquals(user.getFirstName(), userDTO.getUserFirstName());
-        assertEquals(user.getUsername(), userDTO.getUsername());
+        assertEquals(anyValidUser().getFirstName(), userDTO.getUserFirstName());
+        assertEquals(anyValidUser().getUsername(), userDTO.getUsername());
     }
 
     @Test
