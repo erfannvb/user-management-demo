@@ -6,8 +6,8 @@ import nvb.dev.usermanagementdemo.config.InfoConfig;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
 @Component
+@AllArgsConstructor
 @Log
 public class BootstrapData implements CommandLineRunner {
 
@@ -15,10 +15,11 @@ public class BootstrapData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info(String.format("This app is made by %s in %d, this is version %.1f",
-                infoConfig.getMaker(),
-                infoConfig.getYear(),
-                infoConfig.getVersion()
-        ));
+        log.info(
+                String.format("This app is made by %s in %d, this is version %.1f",
+                        infoConfig.getMaker(),
+                        infoConfig.getYear(),
+                        infoConfig.getVersion()
+                ));
     }
 }
